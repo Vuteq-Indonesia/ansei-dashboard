@@ -14,7 +14,6 @@ interface DashboardData {
   percentageDelivery: number;
   percentageAccuracyScan: number;
   totalNG: number;
-  percentageNG: number;
   totalQtyShopping: number;
   QtyDelivered: number;
   totalIncomingMaterial: number;
@@ -209,7 +208,7 @@ export default function Home() {
         labels: [``],
       }
       
-  const seriesNG=[parseFloat(data?.percentageNG.toFixed(1) as string) ?? 0]
+  const seriesNG=[parseFloat(data?.percentageDelivery.toFixed(1) as string) ?? 0]
   const series = [{
     name: 'series-1',
     data: data?.averageDelivery ? data.averageDelivery.value : []
@@ -269,22 +268,22 @@ export default function Home() {
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Planning Delivery</span>
+                   <span className="text-yellow-300">Qty Delivery</span>
                    <span>{data?.totalQtyDeliveryToday ?? 0} Pcs</span>
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Aktual Delivery</span>
+                   <span className="text-yellow-300">Qty Delivered</span>
                    <span>{data?.QtyDelivered ?? 0} Pcs</span>
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Planning Box</span>
+                   <span className="text-yellow-300">Box Delivery</span>
                    <span>{data?.totalBoxDeliveryToday ?? 0} Box/Pallet</span>
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Aktual Box</span>
+                   <span className="text-yellow-300">Box Delivered</span>
                    <span>{data?.totalBoxDeliveredToday ?? 0} Box/Pallet</span>
                  </div>
                </div>
