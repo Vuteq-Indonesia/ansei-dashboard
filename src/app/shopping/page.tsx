@@ -5,6 +5,7 @@ import Image from "next/image";
 import {ApexOptions} from "apexcharts";
 import axios from "axios";
 import axiosTauriApiAdapter from "axios-tauri-api-adapter";
+import {useRouter} from "next/navigation";
 
 interface DashboardData {
   totalDeliveryToday: number;
@@ -14,13 +15,20 @@ interface DashboardData {
   percentageDelivery: number;
   percentageAccuracyScan: number;
   totalNG: number;
+  percentageNG: number;
   totalQtyShopping: number;
   QtyDelivered: number;
   totalIncomingMaterial: number;
   averageDelivery: {
     jam: string[],
     value: number[]
-  }
+  },
+  deliveryByCycle: {
+    deliveryCycle: string,
+    totalPlanned: string,
+    actualQtyDelivered: string,
+    percentage: string
+  }[]
 }
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 export default function Home() {
@@ -28,10 +36,12 @@ export default function Home() {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<DashboardData>()
+  const router = useRouter()
+
   const fetchData = async () => {
     try {
       const client = axios.create({ adapter: axiosTauriApiAdapter });
-      const response = await client.get('http://10.10.10.10:5000/v1/dashboard?apiKey=loremipsumdolositamet', {
+      const response = await client.get('http://localhost:5000/v1/dashboard?apiKey=loremipsumdolositamet', {
         method: 'GET',
       });
       // Ensure the response is ok (status in the range 200-299)
@@ -208,7 +218,7 @@ export default function Home() {
         labels: [``],
       }
       
-  const seriesNG=[parseFloat(data?.percentageDelivery.toFixed(1) as string) ?? 0]
+  const seriesNG=[parseFloat(data?.percentageNG.toFixed(1) as string) ?? 0]
   const series = [{
     name: 'series-1',
     data: data?.averageDelivery ? data.averageDelivery.value : []
@@ -241,7 +251,7 @@ export default function Home() {
        {
          loading ? <center className={`flex h-screen w-full justify-center items-center text-center`}>Loading...</center> : <main className="flex flex-col min-h-screen max-h-screen px-5">
            <div className="flex flex-row h-fit justify-between items-center w-full">
-             <Image src={'/vuteq.png'} alt={'Logo Vuteq'} width={130} height={30}/>
+             <Image src={'/vuteq.png'} alt={'Logo Vuteq'} width={130} height={30} onClick={()=> router.back()}/>
              <h1 className="text-4xl font-light">
                Realtime Dashboard Monitoring Production A: Line Ansei
              </h1>
@@ -268,22 +278,22 @@ export default function Home() {
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Qty Delivery</span>
+                   <span className="text-yellow-300">Planning Delivery</span>
                    <span>{data?.totalQtyDeliveryToday ?? 0} Pcs</span>
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Qty Delivered</span>
+                   <span className="text-yellow-300">Aktual Delivery</span>
                    <span>{data?.QtyDelivered ?? 0} Pcs</span>
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Box Delivery</span>
+                   <span className="text-yellow-300">Planning Box</span>
                    <span>{data?.totalBoxDeliveryToday ?? 0} Box/Pallet</span>
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Box Delivered</span>
+                   <span className="text-yellow-300">Aktual Box</span>
                    <span>{data?.totalBoxDeliveredToday ?? 0} Box/Pallet</span>
                  </div>
                </div>

@@ -5,7 +5,9 @@ import Image from "next/image";
 import {ApexOptions} from "apexcharts";
 import axios from "axios";
 import axiosTauriApiAdapter from "axios-tauri-api-adapter";
+import {useRouter} from "next/navigation";
 
+// Interface Class
 interface DashboardData {
   totalDeliveryToday: number;
   totalQtyDeliveryToday: number;
@@ -21,14 +23,20 @@ interface DashboardData {
   averageDelivery: {
     jam: string[],
     value: number[]
-  }
+  },
+  formattedDeliveryByCycle: number[]
 }
+
+// Chart Init
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
 export default function Home() {
   const [time, setTime] = useState<Date | null>(null)
-  const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<DashboardData>()
+  const router = useRouter()
+
+  // Get Data From API
   const fetchData = async () => {
     try {
       const client = axios.create({ adapter: axiosTauriApiAdapter });
@@ -37,7 +45,6 @@ export default function Home() {
       });
       // Ensure the response is ok (status in the range 200-299)
       if (!response.status) {
-        console.log(response.data)
         return;
       }
       // Parse the JSON data
@@ -50,6 +57,8 @@ export default function Home() {
       setLoading(false)
     }
   };
+
+  // Fetch API State
   useEffect(() => {
     // Interval to update time and fetch data
     const interval = setInterval(() => {
@@ -66,6 +75,7 @@ export default function Home() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+  // Chart Option
   const option: ApexOptions = {
     chart: {
       id: 'apexchart-example',
@@ -84,6 +94,10 @@ export default function Home() {
       categories: data?.averageDelivery ? data.averageDelivery.jam : []
     },
   }
+  const series = [{
+    name: 'series-1',
+    data: data?.averageDelivery ? data.averageDelivery.value : []
+  }]
   const optionAccuracy: ApexOptions = {
     chart: {
       id: 'apexchart-example2',
@@ -208,33 +222,68 @@ export default function Home() {
         },
         labels: [``],
       }
-      
   const seriesNG=[parseFloat(data?.percentageNG.toFixed(1) as string) ?? 0]
-  const series = [{
-    name: 'series-1',
-    data: data?.averageDelivery ? data.averageDelivery.value : []
-  }]
-  const option2: ApexOptions = {
+  const optionCycle: ApexOptions = {
     chart: {
-      id: 'apexchart-example',
-      width: '100%',
+      type: 'bar',
       height: 350,
-      foreColor: 'white'
+      stacked: true,
+      foreColor: 'white',
+      width: '100%',
     },
-    dataLabels: {
-      enabled: true,
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        dataLabels: {
+          total: {
+            enabled: false,
+            offsetX: 0,
+            formatter: function (val) {
+              return val + "%"
+            },
+            style: {
+              fontSize: '13px',
+              fontWeight: 900,
+              color: 'white'
+            }
+          }
+        }
+      },
     },
     colors: ['#b71e9a', '#545454'],
+
     stroke: {
-      curve: 'smooth'
+      width: 1,
+      colors: ['#fff']
     },
     xaxis: {
-      categories: []
+      categories: ['Cycle 1', 'Cycle 2', 'Cycle 3'],
+      labels: {
+        formatter: function (val) {
+          return val + "%"
+        }
+      }
     },
+    yaxis: {
+      title: {
+        text: undefined
+      },
+    },
+    fill: {
+      opacity: 1
+    },
+    legend: {
+      formatter: function (val) {
+        return val + "%"
+      },
+      position: 'top',
+      horizontalAlign: 'left',
+      offsetX: 40
+    }
   }
-  const series2 = [{
-    name: 'series-1',
-    data:  []
+  const seriesCycle = [{
+    name: 'Actual Delivery',
+    data: data?.formattedDeliveryByCycle ? data.formattedDeliveryByCycle : []
   }]
 
   return (
@@ -251,6 +300,7 @@ export default function Home() {
              // {(typeof window !== 'undefined') &&
              //     await appWindow.setFullscreen(true)
              // }}
+                 onClick={()=> router.push('/shopping')}
              src={'/nova3.png'} alt={'Logo Vuteq'} width={130} height={30}/>
            </div>
            <div className="flex flex-1 gap-3 min-h-full max-h-full w-full pb-5 ">
@@ -367,16 +417,10 @@ export default function Home() {
 
                {/* Average Shopping Time */}
                <div className="w-full col-span-2 flex flex-col justify-between items-center rounded bg-card p-6">
-                 <span className="text-yellow-300 text-xl">Average Shopping Time</span>
+                 <span className="text-yellow-300 text-xl">Delivery Per Cycle</span>
                  <div className="w-full h-auto">
                    {(typeof window !== 'undefined') &&
-                       <ApexChart
-                           type="line"
-                           height={350}
-                           options={option2}
-                           series={series2}
-                           width="100%"
-                       />
+                       <ApexChart options={optionCycle} series={seriesCycle} type="bar" width="100%" height={350} />
                    }
                  </div>
                </div>
