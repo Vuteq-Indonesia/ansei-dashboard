@@ -10,6 +10,8 @@ import {useRouter} from "next/navigation";
 // Interface Class
 interface DashboardData {
   totalDeliveryToday: number;
+  deliveryDateStart: string;
+  deliveryDateEnd: string;
   totalQtyDeliveryToday: number;
   totalBoxDeliveryToday: number;
   totalBoxDeliveredToday: number;
@@ -251,7 +253,9 @@ export default function Home() {
       },
     },
     colors: ['#b71e9a', '#545454'],
-
+    dataLabels: {
+      enabled: false
+    },
     stroke: {
       width: 1,
       colors: ['#fff']
@@ -324,7 +328,7 @@ export default function Home() {
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Aktual Delivery</span>
+                   <span className="text-yellow-300">Actual Delivery</span>
                    <span>{data?.QtyDelivered ?? 0} Pcs</span>
                  </div>
                  <div
@@ -334,7 +338,7 @@ export default function Home() {
                  </div>
                  <div
                      className="w-full text-xl rounded bg-card flex flex-col items-center justify-center px-10 py-6 gap-3">
-                   <span className="text-yellow-300">Aktual Box</span>
+                   <span className="text-yellow-300">Actual Box</span>
                    <span>{data?.totalBoxDeliveredToday ?? 0} Box/Pallet</span>
                  </div>
                </div>
@@ -401,7 +405,7 @@ export default function Home() {
 
                {/* Delivery Per Hours */}
                <div className="w-full col-span-2 flex flex-col justify-between items-center rounded bg-card p-6">
-                 <span className="text-yellow-300 text-xl">Delivery Per Hours</span>
+                 <span className="text-yellow-300 text-xl">Delivery/Hours</span>
                  <div className="w-full h-auto">
                    {(typeof window !== 'undefined') &&
                        <ApexChart
@@ -417,7 +421,7 @@ export default function Home() {
 
                {/* Average Shopping Time */}
                <div className="w-full col-span-2 flex flex-col justify-between items-center rounded bg-card p-6">
-                 <span className="text-yellow-300 text-xl">Delivery Per Cycle</span>
+                 <span className="text-yellow-300 text-xl">Delivery/Cycle</span>
                  <div className="w-full h-auto">
                    {(typeof window !== 'undefined') &&
                        <ApexChart options={optionCycle} series={seriesCycle} type="bar" width="100%" height={350} />
