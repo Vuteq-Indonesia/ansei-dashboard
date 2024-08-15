@@ -22,3 +22,12 @@ html, body {
 html, body, #root {
   height: 100%;
 }
+
+.hidden-scroll::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for WebKit-based browsers */
+}
+
+.hidden-scroll {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

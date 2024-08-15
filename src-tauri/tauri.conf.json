@@ -7,14 +7,15 @@
     "distDir": "../out"
   },
   "package": {
-    "productName": "ansei-dashboard-monitor",
+    "productName": "clip-inspection",
     "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
-      "all": false,
+      "all": true,
       "window": {
-        "setFullscreen": true
+        "all": true,
+        "setFullscreen": false
       },
       "http": {
         "all": true,
@@ -22,6 +23,7 @@
         "scope": [
           "http://10.10.10.10:5000/*",
           "http://localhost:5000/*",
+          "http://localhost:8080/*",
           "https://nova.vuteq.co.id/*"
         ]
       }
@@ -41,7 +43,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.vuteq.ansei",
+      "identifier": "com.vuteq.clip",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -60,7 +62,6 @@
       }
     },
     "security": {
-      "dangerousUseHttpScheme": true,
       "csp": null
     },
     "updater": {
@@ -68,10 +69,10 @@
     },
     "windows": [
       {
-        "fullscreen": true,
+        "fullscreen": false,
         "height": 720,
         "resizable": true,
-        "title": "Ansei Realtime Monitoring",
+        "title": "Vuteq Realtime Inspection System",
         "width": 1080,
         "maximized": true
       }

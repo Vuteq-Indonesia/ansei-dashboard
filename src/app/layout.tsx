@@ -8,7 +8,8 @@ import {ConfigProvider} from "antd";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Ansei Realtime Dashboard",
+  title: "Vuteq Inspection System",
+  description: "Vuteq Inspection System",
 };
 
 export default function RootLayout({
@@ -23,20 +24,14 @@ export default function RootLayout({
       theme={{
           token: {
               colorTextHeading: 'black',
-              colorText: 'white',
-              colorPrimaryText: 'white',
+              colorText: 'black',
+              colorPrimaryText: 'black',
           },
           components: {
               Card: {
                   colorBgContainer: '#1B1A55',
                   colorTextBase: 'white'
               },
-              Statistic: {
-                  titleFontSize: 18,
-                  colorText: 'white',
-                  colorTextHeading: 'white',
-                  colorTextLabel: 'white'
-              }
           }
       }}
       >
