@@ -29,8 +29,13 @@ export default function Home() {
       });
       setLoading(false)
     }, 1000)
+    init()
   }, []);
 
+  const init = async () =>{
+    const list = await printers()
+    console.log(list)
+  }
 
   const handlePrint = () => {
     // Ensure printHelloWorld runs only in the client environment
