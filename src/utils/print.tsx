@@ -3,6 +3,7 @@
 import {jsPDF, RGBAData} from "jspdf";
 import qrcode from "qrcode";
 import {invoke} from "@tauri-apps/api/tauri";
+import {print_file} from "tauri-plugin-printer";
 
 async function printHelloWorld(qty: number, part: string) {
     try {
@@ -14,8 +15,23 @@ async function printHelloWorld(qty: number, part: string) {
         const uint8Array = new Uint8Array(pdfBuffer);
 
         // Invoke the Rust command to print
-        const result = await invoke('print_hello_world', { pdf_buffer: Array.from(uint8Array) });
-        console.log(result); // Should log "Pencetakan selesai!"
+        // const result = await invoke('print_hello_world', { pdf_buffer: Array.from(uint8Array) });
+        // console.log(result); // Should log "Pencetakan selesai!"
+        await print_file({
+            id:"WHByaW50ZXIgWFAtNDIwQg==",
+            file: pdfBuffer,
+            print_setting: {
+                orientation: "landscape",
+                method: "simplex", // duplex | simplex | duplexshort
+                paper: "A4", // "A2" | "A3" | "A4" | "A5" | "A6" | "letter" | "legal" | "tabloid"
+                scale: "noscale", //"noscale" | "shrink" | "fit"
+                repeat: 1, // total copies
+                range: {        // print page 1 - 3
+                    from: 1,
+                    to: 1
+                }
+            }
+        })
     } catch (error) {
         console.error('Gagal mencetak:', error);
     }
