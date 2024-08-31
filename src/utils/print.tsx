@@ -15,7 +15,7 @@ async function printHelloWorld(qty: number, part: string) {
         const uint8Array = new Uint8Array(pdfBuffer);
 
         // Invoke the Rust command to print
-        // const result = await invoke('print_hello_world', { pdf_buffer: Array.from(uint8Array) });
+        // a const result = await invoke('print_hello_world', { pdf_buffer: Array.from(uint8Array) });
         // console.log(result); // Should log "Pencetakan selesai!"
         await print_file({
             id:"WHByaW50ZXIgWFAtNDIwQg==",
