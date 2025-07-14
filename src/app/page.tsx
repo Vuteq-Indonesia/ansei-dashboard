@@ -42,7 +42,7 @@ export default function Home() {
   const fetchData = async () => {
     try {
       const client = axios.create({ adapter: axiosTauriApiAdapter });
-      const response = await client.get('http://10.10.10.10:5000/v1/dashboard?apiKey=loremipsumdolositamet', {
+      const response = await client.get('https://api-gateway.vuteq.co.id/gateway/ansei/dashboard?apiKey=loremipsumdolositamet', {
         method: 'GET',
       });
       // Ensure the response is ok (status in the range 200-299)
